@@ -44,24 +44,24 @@ class Car(EventHandler):
         self._win.add(self._left_light)
 
         self._rect.add_handler(self)
-        self._left_light.add_handler(self)
         self._right_light.add_handler(self)
+        self._left_light.add_handler(self)
+        self._win.add(self._rect)
 
-        # Represent which direction the car is moving
-        # x = 1 is moving right, x = -1 is moving left
-        # y = 1 is moving down, y = -1 is moving up
+        #Give the heading / direction car is facing
+        # x = 1 means moving right, x = -1 means moving left (0 means not moving in dir)
+        # y = 1 means moving down, y = -1 means moving up (0 means not moving in dir)
         self._heading_x = 1
         self._heading_y = 0
 
-        self._win.add(self._rect)
-
     def move(self, direction):
         """ Move car to the right/left 20 pixels."""
+
         (x, y) = self._center
         if direction == "forward":
-            self._center = (x + self._heading_x * 20, y)
+            self._center = (x + self._heading_x * 20, y + self._heading_y * 20)
         elif direction == "backward":
-            self._center = (x - self._heading_x * 20, y)
+            self._center = (x - self._heading_x * 20, y - self._heading_y * 20)
 
         self._right_light_center = (self._center[0] + self._width//3, \
                                     self._center[1] + self._length//4)
@@ -76,15 +76,15 @@ class Car(EventHandler):
 class Button(EventHandler):
     """ A button that when clicked will make a car move in a given direction. """
 
-    def __init__(self, win, car, radius, center, direction):
+    def __init__(self, window, car, radius, center, direction):
         """ Initialize the buttion's attributes. """
         EventHandler.__init__(self)
-        self._win = win
+        self._win = window
         self._car = car
         self._radius = radius
         self._center = center
         self._direction = direction
-        self._circle = Circle(win, radius, center)
+        self._circle = Circle(self._win, self._radius, self._center)
         self._circle.set_fill_color("lightgray")
         self._win.add(self._circle)
         self._circle.add_handler(self)
@@ -104,11 +104,9 @@ def main(win):
     win.set_width(WIN_WIDTH)
     win.set_height(WIN_HEIGHT)
 
-    # Make car and buttons that control its movement
     car = Car(win, 100, 40, (100, 500))
-    forward_button = Button(win, car, 15, (100, 20), "forward")
-    backward_button = Button(win, car, 15, (100, 50), "backward")
-
+    button = Button(win, car, 15, (100,20), "forward")
+    button = Button(win, car, 15, (100,70), "backward")
 
 if __name__ == '__main__':
     """When using cs110graphics, replace the usual line with this one:"""
