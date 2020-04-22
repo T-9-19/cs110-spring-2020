@@ -84,7 +84,7 @@ class Car(EventHandler):
         elif direction == "backward":
             change_x = - self._heading_x * self._distance
             change_y = - self._heading_y * self._distance
-            
+
             for component in self._components:
                 component.move(change_x, change_y)
         elif direction == "left":
